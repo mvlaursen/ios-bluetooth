@@ -10,65 +10,32 @@
 #import "ViewController.h"
 
 @interface ViewController ()
-
 @end
 
-@implementation ViewController
+@implementation ViewController {
+    CBCentralManager *centralManager;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     // TODO Consider setting the options in this call.
-    CBCentralManager *myCentralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil options:nil];
-    [myCentralManager scanForPeripheralsWithServices:nil options:nil];
+    centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil options:nil];
 }
 
+// MARK: - CBCentralManagerDelegate
 
 - (void)centralManagerDidUpdateState:(nonnull CBCentralManager *)central {
+    switch (central.state) {
+        case CBManagerStatePoweredOn:
+            [centralManager scanForPeripheralsWithServices:nil options:nil];
+            break;
+        case CBManagerStateUnsupported:
+            printf("Bluetooth is unsupported.");
+            break;
+        default:
+            break;
+    }
 }
-
-//- (void)encodeWithCoder:(nonnull NSCoder *)aCoder {
-//    <#code#>
-//}
-
-//- (void)traitCollectionDidChange:(nullable UITraitCollection *)previousTraitCollection {
-//    <#code#>
-//}
-
-//- (void)preferredContentSizeDidChangeForChildContentContainer:(nonnull id<UIContentContainer>)container {
-//    <#code#>
-//}
-
-//- (CGSize)sizeForChildContentContainer:(nonnull id<UIContentContainer>)container withParentContainerSize:(CGSize)parentSize {
-//    <#code#>
-//}
-
-//- (void)systemLayoutFittingSizeDidChangeForChildContentContainer:(nonnull id<UIContentContainer>)container {
-//    <#code#>
-//}
-
-//- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(nonnull id<UIViewControllerTransitionCoordinator>)coordinator {
-//    <#code#>
-//}
-
-//- (void)willTransitionToTraitCollection:(nonnull UITraitCollection *)newCollection withTransitionCoordinator:(nonnull id<UIViewControllerTransitionCoordinator>)coordinator {
-//    <#code#>
-//}
-
-//- (void)didUpdateFocusInContext:(nonnull UIFocusUpdateContext *)context withAnimationCoordinator:(nonnull UIFocusAnimationCoordinator *)coordinator {
-//    <#code#>
-//}
-
-//- (void)setNeedsFocusUpdate {
-//    <#code#>
-//}
-
-//- (BOOL)shouldUpdateFocusInContext:(nonnull UIFocusUpdateContext *)context {
-//    <#code#>
-//}
-
-//- (void)updateFocusIfNeeded {
-//    <#code#>
-//}
 
 @end
