@@ -27,11 +27,16 @@
 
 - (void)centralManagerDidUpdateState:(nonnull CBCentralManager *)central {
     switch (central.state) {
+        case CBManagerStateUnsupported:
+            {
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Bluetooth Not Supported" message:@"Bluetooth is not supported on this device." preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *acknowledgeAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+                [alertController addAction:acknowledgeAction];
+                [self presentViewController:alertController animated:YES completion:nil];
+            }
+            break;
         case CBManagerStatePoweredOn:
             [centralManager scanForPeripheralsWithServices:nil options:nil];
-            break;
-        case CBManagerStateUnsupported:
-            printf("Bluetooth is unsupported.");
             break;
         default:
             break;
