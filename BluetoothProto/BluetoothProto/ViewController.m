@@ -19,11 +19,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // TODO Consider setting the options in this call.
+    // TODO Consider setting the options on this call.
     centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil options:nil];
 }
 
 // MARK: - CBCentralManagerDelegate
+
+- (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI {
+    NSString *name = @"Unnamed";
+    if (peripheral.name != nil)
+        name = peripheral.name;
+    
+    NSLog(@"Discovered %@", name);
+}
 
 - (void)centralManagerDidUpdateState:(nonnull CBCentralManager *)central {
     switch (central.state) {
@@ -36,6 +44,8 @@
             }
             break;
         case CBManagerStatePoweredOn:
+            // TODO Consider setting the options on this call.
+            // TODO Should I do this in this switch statement, or it best to do it somewhere else?
             [centralManager scanForPeripheralsWithServices:nil options:nil];
             break;
         default:
