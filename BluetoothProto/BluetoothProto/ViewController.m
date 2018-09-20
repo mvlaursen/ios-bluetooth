@@ -14,6 +14,7 @@
 
 @implementation ViewController {
     CBCentralManager *centralManager;
+    NSString *discoveryReport;
 }
 
 - (void)viewDidLoad {
@@ -21,16 +22,25 @@
     
     // TODO Consider setting the options on this call.
     centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil options:nil];
+    discoveryReport = @"Discovered Peripherals\n";
 }
 
 // MARK: - CBCentralManagerDelegate
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI {
-    NSString *name = @"Unnamed";
-    if (peripheral.name != nil)
-        name = peripheral.name;
+    NSString *peripheralAddress = [NSString stringWithFormat:@"%p", peripheral];
     
-    NSLog(@"Discovered %@", name);
+    NSString *peripheralName = @"Unnamed";
+    if (peripheral.name != nil)
+        peripheralName = peripheral.name;
+    
+    NSString *localName = @"No local name";
+    NSObject *localNameValue = [advertisementData objectForKey:CBAdvertisementDataLocalNameKey];
+    if (localNameValue != nil)
+        localName = (NSString *) localNameValue;
+    
+    discoveryReport = [discoveryReport stringByAppendingString:[NSString stringWithFormat:@"\n%@ %@ %@", peripheralAddress, peripheralName, localName]];
+    [_textView setText:discoveryReport];
 }
 
 - (void)centralManagerDidUpdateState:(nonnull CBCentralManager *)central {

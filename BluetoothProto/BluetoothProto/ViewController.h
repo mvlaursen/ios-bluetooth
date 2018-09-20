@@ -10,6 +10,7 @@
 
 @interface ViewController : UIViewController <CBCentralManagerDelegate>
 
+@property (weak, nonatomic) IBOutlet UITextView *textView;
 
 @end
 
