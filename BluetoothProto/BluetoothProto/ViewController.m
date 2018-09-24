@@ -44,8 +44,8 @@
         NSObject *localNameValue = [advertisementData objectForKey:CBAdvertisementDataLocalNameKey];
         if (localNameValue != nil)
             localName = (NSString *) localNameValue;
-    
-        discoveryReport = [discoveryReport stringByAppendingString:[NSString stringWithFormat:@"\n%@ %@ %@", peripheralAddress, peripheralName, localName]];
+            
+        discoveryReport = [discoveryReport stringByAppendingString:[NSString stringWithFormat:@"\n%@ %@ %@ %@", peripheralAddress, peripheralName, localName, RSSI]];
         [_textView setText:discoveryReport];
     }
 }
