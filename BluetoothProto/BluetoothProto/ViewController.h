@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController <CBCentralManagerDelegate>
+@interface ViewController : UIViewController <CBCentralManagerDelegate, CBPeripheralDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 

@@ -44,9 +44,11 @@
         NSObject *localNameValue = [advertisementData objectForKey:CBAdvertisementDataLocalNameKey];
         if (localNameValue != nil)
             localName = (NSString *) localNameValue;
-            
+        
         discoveryReport = [discoveryReport stringByAppendingString:[NSString stringWithFormat:@"\n%@ %@ %@ %@", peripheralAddress, peripheralName, localName, RSSI]];
         [_textView setText:discoveryReport];
+        
+        [centralManager connectPeripheral:peripheral options:nil];
     }
 }
 
@@ -68,6 +70,30 @@
         default:
             break;
     }
+}
+
+- (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
+    peripheral.delegate = self;
+    [peripheral discoverServices:nil];
+}
+
+// MARK :- CBPeripheralDelegate
+
+- (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error {
+    for (CBService *service in peripheral.services) {
+        [peripheral discoverCharacteristics:nil forService:service];
+    }
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error {
+    for (CBCharacteristic *characteristic in service.characteristics) {
+        [peripheral readValueForCharacteristic:characteristic];
+    }
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
+    
+    discoveryReport = [discoveryReport stringByAppendingString:[NSString stringWithFormat:@"\n===> Perihperhal: %p ==> Characteristic: %@ ==> Value: %@", peripheral, characteristic, characteristic.value]];
 }
 
 @end
